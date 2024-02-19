@@ -8,46 +8,6 @@ import LizImage from "../assets/Liz.png";
 import LeeseoImage from "../assets/Leeseo.png";
 import AllImage from "../assets/IveLogo.jpeg";
 
-
-const HeaderContainer = styled.div`
-  display: flex;
-  flex-direction: row;
-`;
-
-const ArtistTab = styled.div`
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  cursor: pointer;
-  filter: brightness(50%);
-  position: relative;
-  transition: filter 0.3s ease;
-
-  &:hover {
-    filter: brightness(110%);
-  }
-
-  ${(props) =>
-    props.isActive &&
-    `
-    filter: brightness(110%);
-  `}
-`;
-
-const ArtistInfoContainer = styled.div`
-  position: absolute;
-  bottom: 5%;
-  font-size: 25px;
-  font-weight: bolder;
-  text-shadow: 0 0 7px #f00, 0 0 10px #f00, 0 0 21px #f00, 0 0 42px #f00,
-  0 0 82px #f00, 0 0 92px #f00, 0 0 102px #f00, 0 0 151px #f00;
-  color: white;
-  width: 100%;
-  padding: 5px;
-  box-sizing: border-box;
-  text-align: center;
-`;
-
 const Header = ({ setActiveTab, activeTab }) => {
   const artists = ["all", "유진", "가을", "레이", "원영", "리즈", "이서"];
 
@@ -76,9 +36,9 @@ const Header = ({ setActiveTab, activeTab }) => {
   };
 
   return (
-    <HeaderContainer>
+    <StHeaderContainer>
       {artists.map((artist) => (
-        <ArtistTab
+        <StArtistTab
           key={artist}
           isActive={activeTab === artist}
           onClick={() => handleTabClick(artist)}
@@ -88,13 +48,52 @@ const Header = ({ setActiveTab, activeTab }) => {
             alt={`${artist}`}
             style={{ width: "206px", height: "350px", objectFit: "cover" }}
           />
-          <ArtistInfoContainer>
+          <StArtistInfoContainer>
             {artistNames[artist]}
-          </ArtistInfoContainer>
-        </ArtistTab>
+          </StArtistInfoContainer>
+        </StArtistTab>
       ))}
-    </HeaderContainer>
+    </StHeaderContainer>
   );
 };
+
+const StHeaderContainer = styled.div`
+  display: flex;
+  flex-direction: row;
+`;
+
+const StArtistTab = styled.div`
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  cursor: pointer;
+  filter: brightness(50%);
+  position: relative;
+  transition: filter 0.3s ease;
+
+  &:hover {
+    filter: brightness(110%);
+  }
+
+  ${(props) =>
+    props.isActive &&
+    `
+    filter: brightness(110%);
+  `}
+`;
+
+const StArtistInfoContainer = styled.div`
+  position: absolute;
+  bottom: 5%;
+  font-size: 25px;
+  font-weight: bolder;
+  text-shadow: 0 0 7px #f00, 0 0 10px #f00, 0 0 21px #f00, 0 0 42px #f00,
+  0 0 82px #f00, 0 0 92px #f00, 0 0 102px #f00, 0 0 151px #f00;
+  color: white;
+  width: 100%;
+  padding: 5px;
+  box-sizing: border-box;
+  text-align: center;
+`;
 
 export default Header;

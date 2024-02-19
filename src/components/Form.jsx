@@ -5,84 +5,6 @@ import { useDispatch } from "react-redux";
 import { addFanLetter } from "../redux/modules/fanLetters";
 import { v4 as uuidv4 } from 'uuid';
 
-const FormContainer = styled.div`
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  margin: 20px;
-`;
-
-const AddForm = styled.form`
-  display: flex;
-  width: 500px;
-  height: 350px;
-  flex-direction: column;
-  align-items: center;
-  background-color:#dc143c;
-  border-radius: 3%;
-`;
-
-const Input = styled.input`
-  background-color: #f08080;
-  margin: 10px;
-  width: 200px;
-  height: 40px;
-  color: #fffaf0;;
-  font-weight: bold;
-  &::placeholder {
-    color: #fffaf0;
-    font-size: 14px;
-    font-weight: bold; 
-  }
-`;
-
-const TextArea = styled.textarea`
-  background-color: #f08080;
-  margin: 10px;
-  width: 450px;
-  height: 300px;
-  color: #fffaf0;;
-  font-weight: bold;
-  &::placeholder {
-    color: #fffaf0;;
-    font-size: 15px;
-    font-weight: bold; 
-  }
-`;
-
-const Select = styled.select`
-  background-color: #f08080;
-  margin: 10px;
-  padding: 5px;
-  width: 150px;
-  height: 40px;
-  color: #fffaf0;;
-  font-weight: bold;
-`;
-
-const Option = styled.option``;
-
-const SubmitButton = styled.button`
-  background-color: #f08080;
-  border: none;
-  width: 80px;
-  height: 40px;
-  margin: 10px;
-  color: #fffaf0;;
-  cursor: pointer;
-  font-weight: bold;
-  transition: background-color 0.3s ease;
-
-  &:hover {
-    background-color:#800000; /* 호버 시 배경색 변경 */
-  } 
-`;
-
-const RemainingCharacters = styled.span`
-  color: #fffaf0;;
-`;
-
-
 // 아티스트 목록
 const artists = ["all", "유진", "가을", "레이", "원영", "리즈", "이서"];
 
@@ -132,42 +54,119 @@ const Form = () => {
   };
 
   return (
-    <FormContainer>
-      <AddForm onSubmit={handleFormSubmit}>
-        <Input
+    <StFormContainer>
+      <StAddForm onSubmit={handleFormSubmit}>
+        <StInput
           type="text"
           placeholder="닉네임"
           value={nickname}
           onChange={(e) => setNickname(e.target.value)}
           maxLength={20}
         />
-         <RemainingCharacters>
+         <StRemainingCharacters>
           남은 글자 수: {calculateRemainingCharacters(nickname.length, 20)}
-        </RemainingCharacters>
-        <TextArea
+        </StRemainingCharacters>
+        <StTextArea
           placeholder="팬레터 내용"
           value={content}
           onChange={(e) => setContent(e.target.value)}
           maxLength={200}
         />
-         <RemainingCharacters>
+         <StRemainingCharacters>
           남은 글자 수: {calculateRemainingCharacters(content.length, 200)}
-        </RemainingCharacters>
-        <Select
+        </StRemainingCharacters>
+        <StSelect
           value={selectedArtist}
           onChange={(e) => setSelectedArtist(e.target.value)}
         >
-          <Option value="">멤버를 선택해주세요</Option>
+          <StOption value="">멤버를 선택해주세요</StOption>
           {artists.map((artist) => (
-            <Option key={artist} value={artist}>
+            <StOption key={artist} value={artist}>
               {artist}
-            </Option>
+            </StOption>
           ))}
-        </Select>
-        <SubmitButton type="submit">등록하기</SubmitButton>
-      </AddForm>
-    </FormContainer>
+        </StSelect>
+        <StSubmitButton type="submit">등록하기</StSubmitButton>
+      </StAddForm>
+    </StFormContainer>
   );
 };
+
+const StFormContainer = styled.div`
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  margin: 20px;
+`;
+
+const StAddForm = styled.form`
+  display: flex;
+  width: 500px;
+  height: 350px;
+  flex-direction: column;
+  align-items: center;
+  background-color:#dc143c;
+  border-radius: 3%;
+`;
+
+const StInput = styled.input`
+  background-color: #f08080;
+  margin: 10px;
+  width: 200px;
+  height: 40px;
+  color: #fffaf0;;
+  font-weight: bold;
+  &::placeholder {
+    color: #fffaf0;
+    font-size: 14px;
+    font-weight: bold; 
+  }
+`;
+
+const StTextArea = styled.textarea`
+  background-color: #f08080;
+  margin: 10px;
+  width: 450px;
+  height: 300px;
+  color: #fffaf0;;
+  font-weight: bold;
+  &::placeholder {
+    color: #fffaf0;;
+    font-size: 15px;
+    font-weight: bold; 
+  }
+`;
+
+const StSelect = styled.select`
+  background-color: #f08080;
+  margin: 10px;
+  padding: 5px;
+  width: 150px;
+  height: 40px;
+  color: #fffaf0;;
+  font-weight: bold;
+`;
+
+const StOption = styled.option``;
+
+const StSubmitButton = styled.button`
+  background-color: #f08080;
+  border: none;
+  width: 80px;
+  height: 40px;
+  margin: 10px;
+  color: #fffaf0;;
+  cursor: pointer;
+  font-weight: bold;
+  transition: background-color 0.3s ease;
+
+  &:hover {
+    background-color:#800000; /* 호버 시 배경색 변경 */
+  } 
+`;
+
+const StRemainingCharacters = styled.span`
+  color: #fffaf0;;
+`;
 
 export default Form;

@@ -8,22 +8,6 @@ import { addFanLetter } from "../redux/modules/fanLetters";
 import { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 
-const Container = styled.div`
-  display: flex;
-  background-color: black;
-  flex-direction: column;
-  align-items: center;
-`;
-
-const NoLettersMessage = styled.div`
-  margin-top: 20px;
-  margin-bottom: 30px;
-  text-shadow: 0 0 7px #ff66b2, 0 0 10px #ff66b2, 0 0 21px #ff66b2, 0 0 42px #ff66b2,
-    0 0 82px #ff66b2, 0 0 92px #ff66b2, 0 0 102px #ff66b2, 0 0 151px #ff66b2;
-  color: #fff;
-  font-size: 20px;
-`;
-
 export default function Home() {
   const fanLetters = useSelector((state) => state.fanLetters.fanLetters);
   const dispatch = useDispatch();
@@ -50,13 +34,29 @@ export default function Home() {
   };
 
   return (
-    <Container>
+    <StContainer>
       <Header setActiveTab={setActiveTab} activeTab={activeTab} artists={artists} />
       <Form onFanLetterSubmit={handleFanLetterSubmit} artists={artists} />
       {activeTab !== "all" && !hasLettersForArtist(activeTab) && (
-        <NoLettersMessage>{`${activeTab}에게 남겨진 팬레터가 없습니다. 첫 팬레터의 주인공이 되주세요!`}</NoLettersMessage>
+        <StNoLettersMessage>{`${activeTab}에게 남겨진 팬레터가 없습니다. 첫 팬레터의 주인공이 되주세요!`}</StNoLettersMessage>
       )}
       <LetterList activeTab={activeTab} fanLetters={fanLetters} onLetterClick={handleLetterClick} />
-    </Container>
+    </StContainer>
   );
 }
+
+const StContainer = styled.div`
+  display: flex;
+  background-color: black;
+  flex-direction: column;
+  align-items: center;
+`;
+
+const StNoLettersMessage = styled.div`
+  margin-top: 20px;
+  margin-bottom: 30px;
+  text-shadow: 0 0 7px #ff66b2, 0 0 10px #ff66b2, 0 0 21px #ff66b2, 0 0 42px #ff66b2,
+    0 0 82px #ff66b2, 0 0 92px #ff66b2, 0 0 102px #ff66b2, 0 0 151px #ff66b2;
+  color: #fff;
+  font-size: 20px;
+`;

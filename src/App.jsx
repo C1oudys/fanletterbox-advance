@@ -7,9 +7,7 @@ function App() {
   return (
     <>
       <GlobalStyle />
-      <Provider store={store}>
       <Router />
-      </Provider>
     </>
   );
 }
