@@ -2,7 +2,7 @@ import React, { useState } from "react";
 import styled from "styled-components";
 import defaultAvatar from "../assets/defaultavatar.png";
 import { useDispatch } from "react-redux";
-import { addFanLetter } from "../redux/modules/fanLetters";
+import { addFanLetter } from "../redux/modules/fanLettersSlice"; 
 import { v4 as uuidv4 } from 'uuid';
 
 // 아티스트 목록

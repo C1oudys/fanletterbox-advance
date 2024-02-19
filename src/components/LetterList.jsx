@@ -1,7 +1,7 @@
 import React from "react";
 import styled from "styled-components";
 import Letter from "./Letter";
-import { Link as RouterLink, useNavigate } from "react-router-dom";
+import { Link as RouterLink } from "react-router-dom";
 
 const StyledLink = styled(RouterLink)`
   text-decoration: none;

@@ -3,7 +3,7 @@ import styled from "styled-components";
 import { useParams, Link, useNavigate } from "react-router-dom";
 import backgroundImage from "../assets/background.png";
 import { useSelector, useDispatch } from "react-redux";
-import { deleteFanLetter, editFanLetter } from "../redux/modules/fanLetters";
+import { deleteFanLetter, editFanLetter } from "../redux/modules/fanLettersSlice"; // 수정된 경로
 
 const Detail = () => {
   const { id } = useParams();
@@ -30,7 +30,7 @@ const Detail = () => {
       alert("아무런 수정사항이 없습니다.");
     } else {
       const updatedLetter = { ...selectedLetter, content: editedContent };
-      dispatch(editFanLetter(updatedLetter.id, editedContent));
+      dispatch(editFanLetter({ id: updatedLetter.id, content: updatedLetter.content }));
       setIsEditing(false);
       setEditedContent("");
     }

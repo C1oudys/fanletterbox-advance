@@ -1,12 +1,12 @@
-import React from "react";
+import React, { useState } from "react";
 import LetterList from "../components/LetterList";
 import Header from "../components/Header";
 import Form from "../components/Form";
 import styled from "styled-components";
 import { useSelector, useDispatch } from "react-redux";
-import { addFanLetter } from "../redux/modules/fanLetters";
-import { useState, useEffect } from "react";
+import { addFanLetter } from "../redux/modules/fanLettersSlice";
 import { useNavigate } from "react-router-dom";
+
 
 export default function Home() {
   const fanLetters = useSelector((state) => state.fanLetters.fanLetters);
@@ -22,14 +22,9 @@ export default function Home() {
     dispatch(addFanLetter(newFanLetter));
   };
 
-  useEffect(() => {
-    console.log('fanLetters after submit:', fanLetters);
-  }, [fanLetters]);
-
   const artists = ["all", "유진", "가을", "레이", "원영", "리즈", "이서"];
 
   const handleLetterClick = (letterId) => {
-    const selected = fanLetters.find((letter) => letter.id === letterId);
     navigate(`/detail/${letterId}`);
   };
 

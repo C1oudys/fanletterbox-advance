@@ -1,4 +1,3 @@
-import React, { useState } from "react";
 import styled from "styled-components";
 import YujinImage from "../assets/Yujin.png";
 import GaeulImage from "../assets/Gaeul.png";
