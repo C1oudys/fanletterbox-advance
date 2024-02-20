@@ -13,17 +13,19 @@ const authSlice = createSlice({
   initialState,
   reducers: {
     userLogin: (state, action) => {
-      const response = action.payload;
+      const { accessToken, userId, nickname, avatar } = action.payload;
       state.isLoggedIn = true;
-      state.accessToken = response.accessToken;
-      state.userId = response.userId;
-      state.nickname = response.nickname;
-      state.avatar = response.avatar;
+      state.accessToken = accessToken;
+      state.userId = userId;
+      state.nickname = nickname;
+      state.avatar = avatar;
       //   console.log(`id: ${state.userId}`);
       //   console.log(`accessToken> ${state.accessToken}`);
       //   console.log(`nickname: ${state.nickname}`);
       //   console.log(`avatar: ${state.avatar}`);
+      localStorage.setItem("nickname", nickname);
     },
+
     userLogout: (state) => {
       state.isLoggedIn = false;
       state.accessToken = null;

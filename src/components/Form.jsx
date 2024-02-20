@@ -1,78 +1,66 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import styled from "styled-components";
 import defaultAvatar from "../assets/defaultavatar.png";
 import { useDispatch } from "react-redux";
-import { addFanLetter } from "../redux/modules/fanLettersSlice"; 
+import { addFanLetter } from "../redux/modules/fanLettersSlice";
 import { v4 as uuidv4 } from 'uuid';
 
-// 아티스트 목록
 const artists = ["all", "유진", "가을", "레이", "원영", "리즈", "이서"];
 
 const Form = () => {
   const dispatch = useDispatch();
-  const [nickname, setNickname] = useState("");
   const [content, setContent] = useState("");
   const [selectedArtist, setSelectedArtist] = useState("");
+  
+  // localStorage에서 닉네임 가져오기
+  const [nickname, setNickname] = useState(localStorage.getItem('nickname') || "");
+
+  useEffect(() => {
+    // localStorage 업데이트에 따라 닉네임 상태 업데이트 (옵셔널)
+    const storedNickname = localStorage.getItem('nickname');
+    if (storedNickname) {
+      setNickname(storedNickname);
+    }
+  }, []);
 
   const handleFormSubmit = (event) => {
     event.preventDefault();
-
-    // 입력 유효성 검사
-    if (!nickname || !content || selectedArtist === "") {
-      alert("닉네임, 내용, 멤버를 선택하세요.");
+    if (!content || selectedArtist === "") {
+      alert("내용, 멤버를 선택하세요.");
       return;
     }
 
-    // 입력 내용 제한
-    const trimmedNickname = nickname.slice(0, 20); // 20자 제한
     const trimmedContent = content.slice(0, 200); // 200자 제한
-
-    // 새로운 팬 레터 객체 생성
     const newFanLetter = {
-      id: uuidv4(), 
-      avatar: defaultAvatar, // 기본 아바타 이미지 사용
-      nickname: trimmedNickname,
+      id: uuidv4(),
+      avatar: defaultAvatar,
+      nickname,
       content: trimmedContent,
-      createdAt: new Date().toLocaleString("ko"), // 현재 날짜 및 시간
+      createdAt: new Date().toLocaleString("ko"),
       writedTo: selectedArtist,
     };
 
     dispatch(addFanLetter(newFanLetter));
-
-    // 입력값 초기화
-    setNickname("");
     setContent("");
     setSelectedArtist("");
-
-    // 팬레터 등록 완료 알림
     alert("등록 완료되었습니다.");
   };
 
-  // 남은 글자 수 계산 함수
   const calculateRemainingCharacters = (currentLength, maxLength) => {
-    return maxLength - currentLength
+    return maxLength - currentLength;
   };
 
   return (
     <StFormContainer>
       <StAddForm onSubmit={handleFormSubmit}>
-        <StInput
-          type="text"
-          placeholder="닉네임"
-          value={nickname}
-          onChange={(e) => setNickname(e.target.value)}
-          maxLength={20}
-        />
-         <StRemainingCharacters>
-          남은 글자 수: {calculateRemainingCharacters(nickname.length, 20)}
-        </StRemainingCharacters>
+        <StLoggedInUser>닉네임: {nickname}</StLoggedInUser>
         <StTextArea
           placeholder="팬레터 내용"
           value={content}
           onChange={(e) => setContent(e.target.value)}
           maxLength={200}
         />
-         <StRemainingCharacters>
+        <StRemainingCharacters>
           남은 글자 수: {calculateRemainingCharacters(content.length, 200)}
         </StRemainingCharacters>
         <StSelect
@@ -81,9 +69,7 @@ const Form = () => {
         >
           <StOption value="">멤버를 선택해주세요</StOption>
           {artists.map((artist) => (
-            <StOption key={artist} value={artist}>
-              {artist}
-            </StOption>
+            <StOption key={artist} value={artist}>{artist}</StOption>
           ))}
         </StSelect>
         <StSubmitButton type="submit">등록하기</StSubmitButton>
@@ -102,36 +88,23 @@ const StFormContainer = styled.div`
 const StAddForm = styled.form`
   display: flex;
   width: 500px;
-  height: 350px;
+  height: auto; 
   flex-direction: column;
   align-items: center;
-  background-color:#dc143c;
+  background-color: #dc143c;
   border-radius: 3%;
-`;
-
-const StInput = styled.input`
-  background-color: #f08080;
-  margin: 10px;
-  width: 200px;
-  height: 40px;
-  color: #fffaf0;;
-  font-weight: bold;
-  &::placeholder {
-    color: #fffaf0;
-    font-size: 14px;
-    font-weight: bold; 
-  }
+  padding: 20px; 
 `;
 
 const StTextArea = styled.textarea`
   background-color: #f08080;
   margin: 10px;
   width: 450px;
-  height: 300px;
-  color: #fffaf0;;
+  height: 150px;
+  color: #fffaf0;
   font-weight: bold;
   &::placeholder {
-    color: #fffaf0;;
+    color: #fffaf0;
     font-size: 15px;
     font-weight: bold; 
   }
@@ -141,9 +114,9 @@ const StSelect = styled.select`
   background-color: #f08080;
   margin: 10px;
   padding: 5px;
-  width: 150px;
-  height: 40px;
-  color: #fffaf0;;
+  width: 220px; 
+  height: 30px;
+  color: #fffaf0;
   font-weight: bold;
 `;
 
@@ -152,21 +125,27 @@ const StOption = styled.option``;
 const StSubmitButton = styled.button`
   background-color: #f08080;
   border: none;
-  width: 80px;
-  height: 40px;
+  width: 80px; 
+  height: 30px;
   margin: 10px;
-  color: #fffaf0;;
+  border-radius: 5px;
+  color: #fffaf0;
   cursor: pointer;
   font-weight: bold;
   transition: background-color 0.3s ease;
 
   &:hover {
-    background-color:#800000; /* 호버 시 배경색 변경 */
+    background-color: #800000; // Adjusted for a subtle hover effect
   } 
 `;
 
 const StRemainingCharacters = styled.span`
-  color: #fffaf0;;
+  color: #fffaf0;
+`;
+
+const StLoggedInUser = styled.div`
+  color: #fffaf0;
+  margin-bottom: 10px; // Added margin for spacing
 `;
 
 export default Form;

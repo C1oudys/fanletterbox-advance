@@ -116,7 +116,7 @@ function Login() {
             minLength="4"
             maxLength="15"
           />
-          <StSubmitBtn type="submit" onClick={loginHandler} style={{ backgroundColor: isValid ? '#5796e9' : '#f2f2f2' }}>
+          <StSubmitBtn type="submit" onClick={loginHandler} style={{ backgroundColor: isValid ? '#b296aa' : '#f2f2f2' }}>
             로그인
           </StSubmitBtn>
           <StToggleBtn onClick={toggleForm}>회원가입 하기</StToggleBtn>
@@ -155,7 +155,7 @@ function Login() {
           <StSubmitBtn
             type="submit"
             onClick={sineupHandler}
-            style={{ backgroundColor: isValid ? '#5796e9' : '#f2f2f2'  }}
+            style={{ backgroundColor: isValid ? '#b296aa' : '#f2f2f2'  }}
           >
             회원가입
           </StSubmitBtn>
@@ -208,7 +208,6 @@ const StSubmitBtn = styled.button`
   width: 80%;
   border: none;
   border-radius: 15px;
-  background-color: #4b85d0;
   color: black;
   margin: auto;
   margin-top: 20px;
@@ -227,7 +226,13 @@ const StToggleBtn = styled.span`
   cursor: pointer;
   transition: 0.3s;
   &:hover {
-    text-shadow: 0 0 10px 5px rgba(239, 105, 203, 0.8); 
+    color: #fff;
+    text-shadow:
+      0 0 5px rgba(239, 105, 203, 0.7),
+      0 0 10px rgba(239, 105, 203, 0.8),
+      0 0 15px rgba(239, 105, 203, 0.9),
+      0 0 20px rgba(239, 105, 203, 1),
+      0 0 25px rgba(239, 105, 203, 1);
   }
 `;
 
