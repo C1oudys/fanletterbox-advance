@@ -3,7 +3,7 @@ import styled from "styled-components";
 import { useParams, Link, useNavigate } from "react-router-dom";
 import backgroundImage from "../assets/background.png";
 import { useSelector, useDispatch } from "react-redux";
-import { deleteFanLetter, editFanLetter } from "../redux/modules/fanLettersSlice"; // 수정된 경로
+import { deleteFanLetter, editFanLetter } from "../redux/modules/fanLettersSlice"; 
 
 const Detail = () => {
   const { id } = useParams();
@@ -92,7 +92,7 @@ const Detail = () => {
 
 
 const StContainer = styled.div`
-  width: 100%;
+  width: 100vw;
   min-height: 100vh;
   background: url(${backgroundImage});
   background-size: cover;
