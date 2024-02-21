@@ -26,21 +26,33 @@ const Detail = () => {
   };
 
   const handleSaveClick = () => {
-    if (editedContent === selectedLetter.content) {
+    if (editedContent.trim() === selectedLetter.content.trim()) {
       alert("아무런 수정사항이 없습니다.");
     } else {
       const updatedLetter = { ...selectedLetter, content: editedContent };
-      dispatch(editFanLetterAsync({ id: updatedLetter.id, updatedData: { content: updatedLetter.content }}));
+      dispatch(editFanLetterAsync({ id: updatedLetter.id, updatedData: { content: updatedLetter.content }}))
+        .then(() => {
+          navigate(`/`);
+        })
+        .catch((error) => {
+          console.error('팬레터 수정 실패:', error);
+        });
       setIsEditing(false);
       setEditedContent("");
     }
   };
   
+  
   const handleDeleteClick = () => {
     const isConfirmed = window.confirm("정말로 삭제하시겠습니까?");
     if (isConfirmed) {
-      dispatch(deleteFanLetterAsync(id));
-      navigate("/");
+      dispatch(deleteFanLetterAsync(id))
+      .then(() => {
+        navigate(`/`);
+      })
+      .catch((error) => {
+        console.error('팬레터 삭제 실패:', error);
+      });
     }
   };
   

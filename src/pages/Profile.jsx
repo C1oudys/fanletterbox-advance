@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
 import { toast } from 'react-toastify';
+import backgroundImage from "../assets/background.png";
 import styled from 'styled-components';
 import { userLogin } from '../redux/modules/authSlice';
 import api from '../axios/api'; 
@@ -13,7 +14,6 @@ const Profile = () => {
   const [previewAvatar, setPreviewAvatar] = useState(avatar);
   const dispatch = useDispatch();
   const accessToken = localStorage.getItem("accessToken");
-
 
   useEffect(() => {
     setNewNickname(nickname);
@@ -76,59 +76,116 @@ const Profile = () => {
   
   return (
     <ProfileContainer>
-      <ProfileAvatar src={previewAvatar} alt="Profile Avatar" onClick={() => document.getElementById('avatarInput').click()} />
-      <input id="avatarInput" type="file" accept="image/*" onChange={handleAvatarChange} style={{ display: 'none' }} />
-      {!editMode ? (
-        <>
-          <ProfileInfo>ID: {userId}</ProfileInfo>
-          <ProfileInfo>Nickname: {nickname}</ProfileInfo>
-          <EditButton onClick={() => setEditMode(true)}>수정하기</EditButton>
-        </>
-      ) : (
-        <>
-          <NicknameInput value={newNickname} onChange={handleNicknameChange} />
-          <ButtonContainer>
-            <CancelButton onClick={cancelEdit}>취소</CancelButton>
-            <SaveButton onClick={saveChanges} disabled={newNickname === nickname && !newAvatar}>수정완료</SaveButton>
-          </ButtonContainer>
-        </>
-      )}
+      <StContainer>
+        <ProfileWrapper>
+          <ProfileAvatar src={previewAvatar} alt="Profile Avatar" onClick={() => document.getElementById('avatarInput').click()} />
+          <input id="avatarInput" type="file" accept="image/*" onChange={handleAvatarChange} style={{ display: 'none' }} />
+          {!editMode ? (
+            <>
+              <ProfileInfo>ID: {userId}</ProfileInfo>
+              <ProfileInfo>Nickname: {nickname}</ProfileInfo>
+              <EditButton onClick={() => setEditMode(true)}>수정하기</EditButton>
+            </>
+          ) : (
+            <>
+              <NicknameInput value={newNickname} onChange={handleNicknameChange} />
+              <ButtonContainer>
+                <CancelButton onClick={cancelEdit}>취소</CancelButton>
+                <SaveButton onClick={saveChanges} disabled={newNickname === nickname && !newAvatar}>수정완료</SaveButton>
+              </ButtonContainer>
+            </>
+          )}
+        </ProfileWrapper>
+      </StContainer>
     </ProfileContainer>
   );
 };
 
 const ProfileContainer = styled.div`
+  width: 100vw;
+  min-height: 100vh;
+  background: url(${backgroundImage});
+  background-size: cover;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+`;
+
+const StContainer = styled.div`
+  width: 100%;
+  min-height: 100vh;
+  background-color: rgba(0, 0, 0, 0.7);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+`;
+
+const ProfileWrapper = styled.div`
   display: flex;
   flex-direction: column;
   align-items: center;
-  margin-top: 20px;
 `;
 
 const ProfileAvatar = styled.img`
-  width: 100px;
-  height: 100px;
+  width: 120px;
+  height: 120px;
   border-radius: 50%;
   cursor: pointer;
 `;
 
 const ProfileInfo = styled.p`
   margin: 10px 0;
+  font-size: 18px;
+  color: white;
 `;
 
 const NicknameInput = styled.input`
   margin: 10px 0;
+  padding: 5px;
+  font-size: 16px;
 `;
 
 const ButtonContainer = styled.div`
   display: flex;
-  justify-content: space-around;
-  width: 100%;
+  flex-direction: row;
+  justify-content: center;
+  margin-top: 10px;
 `;
 
-const EditButton = styled.button``;
+const EditButton = styled.button`
+  background-color: #007bff;
+  color: #fff;
+  border: none;
+  padding: 8px 16px;
+  border-radius: 4px;
+  cursor: pointer;
+  font-size: 16px;
+`;
 
-const CancelButton = styled.button``;
+const CancelButton = styled.button`
+  background-color: #dc3545;
+  color: #fff;
+  border: none;
+  padding: 8px 16px;
+  border-radius: 4px;
+  margin-right: 10px;
+  cursor: pointer;
+  font-size: 16px;
+`;
 
-const SaveButton = styled.button``;
+const SaveButton = styled.button`
+  background-color: #28a745;
+  color: #fff;
+  border: none;
+  padding: 8px 16px;
+  border-radius: 4px;
+  cursor: pointer;
+  font-size: 16px;
+
+  &:disabled {
+    background-color: #6c757d;
+    cursor: not-allowed;
+  }
+`;
 
 export default Profile;

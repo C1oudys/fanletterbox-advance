@@ -41,7 +41,7 @@ export const editFanLetterAsync = createAsyncThunk(
           Authorization: `Bearer ${accessToken}`,
         },
       });
-      return response.data;
+      return response.data; // Return the updated data from the server
     } catch (err) {
       return rejectWithValue(err.response.data);
     }
@@ -59,7 +59,7 @@ export const deleteFanLetterAsync = createAsyncThunk(
           Authorization: `Bearer ${accessToken}`,
         },
       });
-      return id;
+      return id; // Return the deleted letter ID
     } catch (err) {
       return rejectWithValue(err.response.data);
     }
