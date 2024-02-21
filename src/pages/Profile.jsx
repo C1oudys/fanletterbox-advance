@@ -124,11 +124,17 @@ const StContainer = styled.div`
 
 const ProfileWrapper = styled.div`
   display: flex;
+  width: 300px;
+  height: 300px;
+  padding: 10px;
   flex-direction: column;
   align-items: center;
+  background-color: rgba(21, 21, 21, 0.7);
+  border-radius: 15%;
 `;
 
 const ProfileAvatar = styled.img`
+  margin-top: 20px;
   width: 120px;
   height: 120px;
   border-radius: 50%;
