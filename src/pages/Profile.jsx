@@ -1,10 +1,11 @@
 import React, { useState, useEffect } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
-import { toast } from 'react-toastify';
+import { ToastContainer, toast } from 'react-toastify';
 import backgroundImage from "../assets/background.png";
 import styled from 'styled-components';
 import { userLogin } from '../redux/modules/authSlice';
 import api from '../axios/api'; 
+
 
 const Profile = () => {
   const { userId, nickname, avatar } = useSelector((state) => state.auth);
@@ -54,7 +55,7 @@ const Profile = () => {
         },
       });
   
-      const { nickname, message, success } = response; 
+      const { nickname, success } = response; 
   
       if (success) {
         dispatch(userLogin({
@@ -63,10 +64,10 @@ const Profile = () => {
           nickname: nickname,
           avatar: previewAvatar
         }));
-        toast.success(message); 
+        toast.success(response.message || '프로필 업데이트 성공!');
         setEditMode(false);
       } else {
-        toast.error(message);
+        toast.error(response.message || '프로필 업데이트 실패.'); 
       }
     } catch (error) {
       console.error('프로필 업데이트 실패:', error);
@@ -76,6 +77,7 @@ const Profile = () => {
   
   return (
     <ProfileContainer>
+      <ToastContainer />
       <StContainer>
         <ProfileWrapper>
           <ProfileAvatar src={previewAvatar} alt="Profile Avatar" onClick={() => document.getElementById('avatarInput').click()} />
