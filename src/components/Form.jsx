@@ -1,10 +1,9 @@
-import React, { useState, useEffect } from "react";
+import React, { useState } from "react";
 import styled from "styled-components";
 import defaultAvatar from "../assets/defaultavatar.png";
-import { useDispatch } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { addFanLetterAsync } from '../redux/modules/fanLettersSlice';
 import { v4 as uuidv4 } from 'uuid';
-import { useSelector } from "react-redux";
 
 const artists = ["all", "유진", "가을", "레이", "원영", "리즈", "이서"];
 
@@ -12,27 +11,10 @@ const Form = () => {
   const dispatch = useDispatch();
   const [content, setContent] = useState("");
   const [selectedArtist, setSelectedArtist] = useState("");
-  const userId = useSelector((state) => state.auth.userId);
+  const { userId, avatar: userAvatar } = useSelector((state) => state.auth); // Fetch the current avatar from Redux state
   
-  // localStorage에서 닉네임 가져오기
-  const [nickname, setNickname] = useState(localStorage.getItem('nickname') || "");
-
-  useEffect(() => {
-    const handleStorageChange = () => {
-      const storedNickname = localStorage.getItem('nickname');
-      if (storedNickname) {
-        setNickname(storedNickname);
-      }
-    };
-  
-    // localStorage 변경사항을 감지하기 위한 이벤트 리스너 추가
-    window.addEventListener('storage', handleStorageChange);
-  
-    // 컴포넌트가 언마운트될 때 이벤트 리스너 제거
-    return () => {
-      window.removeEventListener('storage', handleStorageChange);
-    };
-  }, []);
+  // Use localStorage or Redux state for nickname
+  const nickname = localStorage.getItem('nickname') || "";
 
   const handleFormSubmit = (event) => {
     event.preventDefault();
@@ -44,7 +26,7 @@ const Form = () => {
     const trimmedContent = content.slice(0, 200); // 200자 제한
     const newFanLetter = {
       id: uuidv4(),
-      avatar: defaultAvatar,
+      avatar: userAvatar || defaultAvatar, // Use userAvatar if available, otherwise defaultAvatar
       nickname,
       content: trimmedContent,
       createdAt: new Date().toLocaleString("ko"),
@@ -147,7 +129,7 @@ const StSubmitButton = styled.button`
   transition: background-color 0.3s ease;
 
   &:hover {
-    background-color: #800000; // Adjusted for a subtle hover effect
+    background-color: #800000; 
   } 
 `;
 
@@ -157,7 +139,7 @@ const StRemainingCharacters = styled.span`
 
 const StLoggedInUser = styled.div`
   color: #fffaf0;
-  margin-bottom: 10px; // Added margin for spacing
+  margin-bottom: 10px; 
 `;
 
 export default Form;
