@@ -68,19 +68,19 @@ function Login() {
       console.log(error);
     }
   };
+  
 
-  const sineupHandler = async () => {
+  const signupHandler = async () => {
     try {
       const newMember = {
-        id: id,
+        id: id, 
         password: password,
-        nickname: nickname
+        nickname: nickname,
       };
       await api.post('/register', newMember);
       toast.success('회원가입 완료!');
       setShowLoginForm(true); // 회원가입 성공 후 로그인 폼으로 전환
     } catch (error) {
-      // 409 Conflict 오류 처리
       if (error.response && error.response.status === 409) {
         toast.error('이미 사용 중인 아이디나 이메일입니다.');
       } else {
@@ -89,6 +89,7 @@ function Login() {
       console.error('회원가입 오류:', error);
     }
   };
+  
 
   return (
     <StContainer>
@@ -154,7 +155,7 @@ function Login() {
           />
           <StSubmitBtn
             type="submit"
-            onClick={sineupHandler}
+            onClick={signupHandler}
             style={{ backgroundColor: isValid ? '#b296aa' : '#f2f2f2'  }}
           >
             회원가입

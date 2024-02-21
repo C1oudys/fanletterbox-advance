@@ -19,10 +19,10 @@ const authSlice = createSlice({
       state.userId = userId;
       state.nickname = nickname;
       state.avatar = avatar;
-      //   console.log(`id: ${state.userId}`);
-      //   console.log(`accessToken> ${state.accessToken}`);
-      //   console.log(`nickname: ${state.nickname}`);
-      //   console.log(`avatar: ${state.avatar}`);
+      console.log(`id: ${state.userId}`);
+      console.log(`accessToken> ${state.accessToken}`);
+      console.log(`nickname: ${state.nickname}`);
+      console.log(`avatar: ${state.avatar}`);
       localStorage.setItem("nickname", nickname);
     },
 

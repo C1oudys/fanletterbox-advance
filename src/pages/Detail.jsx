@@ -3,7 +3,7 @@ import styled from "styled-components";
 import { useParams, Link, useNavigate } from "react-router-dom";
 import backgroundImage from "../assets/background.png";
 import { useSelector, useDispatch } from "react-redux";
-import { deleteFanLetter, editFanLetter } from "../redux/modules/fanLettersSlice"; 
+import { editFanLetterAsync, deleteFanLetterAsync } from '../redux/modules/fanLettersSlice';
 
 const Detail = () => {
   const { id } = useParams();
@@ -30,7 +30,7 @@ const Detail = () => {
       alert("아무런 수정사항이 없습니다.");
     } else {
       const updatedLetter = { ...selectedLetter, content: editedContent };
-      dispatch(editFanLetter({ id: updatedLetter.id, content: updatedLetter.content }));
+      dispatch(editFanLetterAsync({ id: updatedLetter.id, updatedData: { content: updatedLetter.content }}));
       setIsEditing(false);
       setEditedContent("");
     }
@@ -39,7 +39,7 @@ const Detail = () => {
   const handleDeleteClick = () => {
     const isConfirmed = window.confirm("정말로 삭제하시겠습니까?");
     if (isConfirmed) {
-      dispatch(deleteFanLetter(id));
+      dispatch(deleteFanLetterAsync(id));
       navigate("/");
     }
   };
@@ -95,7 +95,7 @@ const StContainer = styled.div`
   width: 100vw;
   min-height: 100vh;
   background: url(${backgroundImage});
-  background-size: cover;
+  background-size:x cover;
 `;
 
 const StBackground = styled.div`

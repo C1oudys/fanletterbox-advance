@@ -2,8 +2,9 @@ import React, { useState, useEffect } from "react";
 import styled from "styled-components";
 import defaultAvatar from "../assets/defaultavatar.png";
 import { useDispatch } from "react-redux";
-import { addFanLetter } from "../redux/modules/fanLettersSlice";
+import { addFanLetterAsync } from '../redux/modules/fanLettersSlice';
 import { v4 as uuidv4 } from 'uuid';
+import { useSelector } from "react-redux";
 
 const artists = ["all", "유진", "가을", "레이", "원영", "리즈", "이서"];
 
@@ -11,16 +12,26 @@ const Form = () => {
   const dispatch = useDispatch();
   const [content, setContent] = useState("");
   const [selectedArtist, setSelectedArtist] = useState("");
+  const userId = useSelector((state) => state.auth.userId);
   
   // localStorage에서 닉네임 가져오기
   const [nickname, setNickname] = useState(localStorage.getItem('nickname') || "");
 
   useEffect(() => {
-    // localStorage 업데이트에 따라 닉네임 상태 업데이트 (옵셔널)
-    const storedNickname = localStorage.getItem('nickname');
-    if (storedNickname) {
-      setNickname(storedNickname);
-    }
+    const handleStorageChange = () => {
+      const storedNickname = localStorage.getItem('nickname');
+      if (storedNickname) {
+        setNickname(storedNickname);
+      }
+    };
+  
+    // localStorage 변경사항을 감지하기 위한 이벤트 리스너 추가
+    window.addEventListener('storage', handleStorageChange);
+  
+    // 컴포넌트가 언마운트될 때 이벤트 리스너 제거
+    return () => {
+      window.removeEventListener('storage', handleStorageChange);
+    };
   }, []);
 
   const handleFormSubmit = (event) => {
@@ -38,9 +49,10 @@ const Form = () => {
       content: trimmedContent,
       createdAt: new Date().toLocaleString("ko"),
       writedTo: selectedArtist,
+      userId: userId,
     };
 
-    dispatch(addFanLetter(newFanLetter));
+    dispatch(addFanLetterAsync(newFanLetter));
     setContent("");
     setSelectedArtist("");
     alert("등록 완료되었습니다.");

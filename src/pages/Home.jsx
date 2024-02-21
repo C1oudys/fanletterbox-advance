@@ -4,7 +4,7 @@ import Header from "../components/Header";
 import Form from "../components/Form";
 import styled from "styled-components";
 import { useSelector, useDispatch } from "react-redux";
-import { addFanLetter } from "../redux/modules/fanLettersSlice";
+import { addFanLetterAsync } from '../redux/modules/fanLettersSlice';
 import { useNavigate } from "react-router-dom";
 
 
@@ -19,7 +19,7 @@ export default function Home() {
   };
 
   const handleFanLetterSubmit = (newFanLetter) => {
-    dispatch(addFanLetter(newFanLetter));
+    dispatch(addFanLetterAsync(newFanLetter));
   };
 
   const artists = ["all", "유진", "가을", "레이", "원영", "리즈", "이서"];
