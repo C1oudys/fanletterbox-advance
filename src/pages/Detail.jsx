@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import styled from "styled-components";
 import { useParams, Link, useNavigate } from "react-router-dom";
 import backgroundImage from "../assets/background.png";
@@ -9,16 +9,24 @@ const Detail = () => {
   const { id } = useParams();
   const navigate = useNavigate();
   const fanLetters = useSelector((state) => state.fanLetters.fanLetters);
+  const userId = useSelector((state) => state.auth.userId);
+  const accessToken = useSelector((state) => state.auth.accessToken);
   const dispatch = useDispatch();
 
   const [isEditing, setIsEditing] = useState(false);
   const [editedContent, setEditedContent] = useState("");
+  const [isAuthorized, setIsAuthorized] = useState(false);
+
+  useEffect(() => {
+    const selectedLetter = fanLetters.find((letter) => letter.id === id);
+    if (selectedLetter && selectedLetter.userId === userId) {
+      setIsAuthorized(true);
+    } else {
+      setIsAuthorized(false);
+    }
+  }, [fanLetters, id, userId]);
 
   const selectedLetter = fanLetters.find((letter) => letter.id === id);
-
-  if (!selectedLetter) {
-    return <div>팬레터를 찾을 수 없습니다.</div>;
-  }
 
   const handleEditClick = () => {
     setIsEditing(true);
@@ -30,7 +38,7 @@ const Detail = () => {
       alert("아무런 수정사항이 없습니다.");
     } else {
       const updatedLetter = { ...selectedLetter, content: editedContent };
-      dispatch(editFanLetterAsync({ id: updatedLetter.id, updatedData: { content: updatedLetter.content }}))
+      dispatch(editFanLetterAsync({ id: updatedLetter.id, updatedData: { content: updatedLetter.content }}, accessToken))
         .then(() => {
           navigate(`/`);
         })
@@ -42,11 +50,10 @@ const Detail = () => {
     }
   };
   
-  
   const handleDeleteClick = () => {
     const isConfirmed = window.confirm("정말로 삭제하시겠습니까?");
     if (isConfirmed) {
-      dispatch(deleteFanLetterAsync(id))
+      dispatch(deleteFanLetterAsync(id, accessToken))
       .then(() => {
         navigate(`/`);
       })
@@ -56,6 +63,10 @@ const Detail = () => {
     }
   };
   
+  if (!selectedLetter) {
+    return <div>팬레터를 찾을 수 없습니다.</div>;
+  }
+
   return (
     <StContainer>
       <StBackground>
@@ -84,15 +95,19 @@ const Detail = () => {
               <strong>From.</strong> {selectedLetter.nickname}
             </StNickname>
           </StDetailContent>
-          {isEditing ? (
-            <StEditBtnContainer>
-              <StSaveButton onClick={handleSaveClick}>수정 완료</StSaveButton>
-              <StBackButton to="/">취소</StBackButton>
-            </StEditBtnContainer>
-          ) : (
+          {isAuthorized && !isEditing ? (
             <StEditBtnContainer>
               <StEditButton onClick={handleEditClick}>수정</StEditButton>
               <StDeleteButton onClick={handleDeleteClick}>삭제</StDeleteButton>
+            </StEditBtnContainer>
+          ) : (
+            <StEditBtnContainer>
+              {isEditing && (
+                <>
+                  <StSaveButton onClick={handleSaveClick}>수정 완료</StSaveButton>
+                  <StBackButton to="/">취소</StBackButton>
+                </>
+              )}
             </StEditBtnContainer>
           )}
           <StBackButton to="/">홈으로 돌아가기</StBackButton>
@@ -102,12 +117,11 @@ const Detail = () => {
   );
 };
 
-
 const StContainer = styled.div`
   width: 100vw;
   min-height: 100vh;
   background: url(${backgroundImage});
-  background-size:x cover;
+  background-size: cover;
 `;
 
 const StBackground = styled.div`
@@ -255,3 +269,4 @@ const StAvatar = styled.img`
 `;
 
 export default Detail;
+

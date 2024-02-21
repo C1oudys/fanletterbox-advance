@@ -61,6 +61,15 @@
       "createdAt": "2024. 2. 22. 오전 12:44:48",
       "writedTo": "유진",
       "userId": "dddd"
+    },
+    {
+      "id": "c19f5f11-9ac4-4c1a-8d79-fef66b9c17a9",
+      "avatar": "https://react-jwt-avatar.s3.ap-northeast-2.amazonaws.com/24-02-21/913455d8-fa6d-41ca-888a-08b76f800086.jpg",
+      "nickname": "\"테스트\"",
+      "content": "ㅇㅁㄴㅇ",
+      "createdAt": "2024. 2. 22. 오전 1:16:20",
+      "writedTo": "유진",
+      "userId": "dddd"
     }
   ]
 }
