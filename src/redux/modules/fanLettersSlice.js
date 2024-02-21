@@ -71,7 +71,7 @@ const fanLettersSlice = createSlice({
   name: "fanLetters",
   initialState: {
     fanLetters: [],
-    status: "idle", // 'idle', 'loading', 'succeeded', 'failed'
+    status: "idle",
     error: null,
   },
   reducers: {},
