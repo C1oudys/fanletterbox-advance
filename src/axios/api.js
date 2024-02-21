@@ -15,6 +15,21 @@ instance.interceptors.request.use(
   }
 );
 
+instance.interceptors.request.use(
+  function (config) {
+    console.log(`인터셉터 요청 성공`);
+    const accessToken = localStorage.getItem("accessToken");
+    if (accessToken) {
+      config.headers.Authorization = `Bearer ${accessToken}`;
+    }
+    return config;
+  },
+  function (error) {
+    console.log(`인터셉터 요청 오류`);
+    return Promise.reject(error);
+  }
+);
+
 instance.interceptors.response.use(
   function (response) {
     console.log(`인터셉터 응답 받음`);

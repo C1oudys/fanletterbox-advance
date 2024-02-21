@@ -57,7 +57,6 @@ function Login() {
       const response = await api.post('/login', loginInfo);
       dispatch(userLogin(response)); 
       localStorage.setItem('response', JSON.stringify(response)); 
-
       const loginCompleteMsg = () => {
         toast.success('로그인 완료!');
       };

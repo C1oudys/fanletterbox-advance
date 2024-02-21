@@ -1,133 +1,134 @@
-import React, { useState } from 'react';
-import styled from 'styled-components';
+import React, { useState, useEffect } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
+import { toast } from 'react-toastify';
+import styled from 'styled-components';
 import { userLogin } from '../redux/modules/authSlice';
+import api from '../axios/api'; 
 
 const Profile = () => {
+  const { userId, nickname, avatar } = useSelector((state) => state.auth);
+  const [editMode, setEditMode] = useState(false);
+  const [newNickname, setNewNickname] = useState(nickname);
+  const [newAvatar, setNewAvatar] = useState(null);
+  const [previewAvatar, setPreviewAvatar] = useState(avatar);
   const dispatch = useDispatch();
-  const user = useSelector((state) => state.auth);
+  const accessToken = localStorage.getItem("accessToken");
 
-  const [isEditing, setIsEditing] = useState(false);
-  const [editedNickname, setEditedNickname] = useState(user.nickname);
-  const [editedAvatar, setEditedAvatar] = useState(null);
 
-  const handleEditClick = () => {
-    setIsEditing(true);
-  };
-
-  const handleSaveClick = () => {
-    if (editedNickname !== user.nickname || editedAvatar) {
-      const formData = new FormData();
-      formData.append('nickname', editedNickname);
-      if (editedAvatar) {
-        formData.append('avatar', editedAvatar);
-      }
-      // Dispatch action to update user information
-      dispatch(userLogin({ ...user, nickname: editedNickname }));
-      setIsEditing(false);
-      // Update local storage
-      localStorage.setItem('nickname', editedNickname);
-    } else {
-      setIsEditing(false);
-    }
-  };
+  useEffect(() => {
+    setNewNickname(nickname);
+    setPreviewAvatar(avatar);
+  }, [nickname, avatar]);
 
   const handleNicknameChange = (e) => {
-    setEditedNickname(e.target.value);
+    setNewNickname(e.target.value);
   };
 
   const handleAvatarChange = (e) => {
     const file = e.target.files[0];
-    setEditedAvatar(file);
+    setNewAvatar(file);
+    const reader = new FileReader();
+    reader.onloadend = () => {
+      setPreviewAvatar(reader.result);
+    };
+    reader.readAsDataURL(file);
   };
 
+  const cancelEdit = () => {
+    setEditMode(false);
+    setNewNickname(nickname);
+    setPreviewAvatar(avatar);
+    setNewAvatar(null);
+  };
+
+  const saveChanges = async () => {
+    const formData = new FormData();
+    formData.append('avatar', newAvatar);
+    formData.append('nickname', newNickname);
+  
+    try {
+      const response = await api.patch('/profile', formData, {
+        headers: {
+          'Content-Type': 'multipart/form-data',
+          Authorization: `Bearer ${accessToken}`,
+        },
+      });
+  
+      const { nickname, message, success } = response; 
+  
+      if (success) {
+        dispatch(userLogin({
+          accessToken: localStorage.getItem("accessToken"), 
+          userId: userId,
+          nickname: nickname,
+          avatar: previewAvatar
+        }));
+        toast.success(message); 
+        setEditMode(false);
+      } else {
+        toast.error(message);
+      }
+    } catch (error) {
+      console.error('프로필 업데이트 실패:', error);
+      toast.error('프로필 업데이트 실패. 다시 시도해주세요.');
+    }
+  };
+  
   return (
-    <Container>
-      <AvatarContainer>
-        <AvatarImg src={user.avatar} alt="프로필 이미지" />
-        <UserId>userId: {user.userId}</UserId>
-        <Nickname>Nickname: {user.nickname}</Nickname>
-        {isEditing && (
-          <AvatarInput type="file" accept="image/*" onChange={handleAvatarChange} />
-        )}
-      </AvatarContainer>
-      {!isEditing ? (
-        <EditButton onClick={handleEditClick}>프로필 수정</EditButton>
+    <ProfileContainer>
+      <ProfileAvatar src={previewAvatar} alt="Profile Avatar" onClick={() => document.getElementById('avatarInput').click()} />
+      <input id="avatarInput" type="file" accept="image/*" onChange={handleAvatarChange} style={{ display: 'none' }} />
+      {!editMode ? (
+        <>
+          <ProfileInfo>ID: {userId}</ProfileInfo>
+          <ProfileInfo>Nickname: {nickname}</ProfileInfo>
+          <EditButton onClick={() => setEditMode(true)}>수정하기</EditButton>
+        </>
       ) : (
         <>
-          <NicknameInput
-            type="text"
-            value={editedNickname}
-            onChange={handleNicknameChange}
-          />
-          <SaveButton onClick={handleSaveClick}>저장</SaveButton>
-          <CancelButton onClick={() => setIsEditing(false)}>취소</CancelButton>
+          <NicknameInput value={newNickname} onChange={handleNicknameChange} />
+          <ButtonContainer>
+            <CancelButton onClick={cancelEdit}>취소</CancelButton>
+            <SaveButton onClick={saveChanges} disabled={newNickname === nickname && !newAvatar}>수정완료</SaveButton>
+          </ButtonContainer>
         </>
       )}
-    </Container>
+    </ProfileContainer>
   );
 };
 
-const Container = styled.div`
+const ProfileContainer = styled.div`
   display: flex;
-  text-align: center;
-  align-items: center;
   flex-direction: column;
-  justify-content: center;
-  height: 100vh;
-`;
-
-const AvatarContainer = styled.div`
-  position: relative;
-`;
-
-const AvatarImg = styled.img`
-  width: 120px;
-  height: 120px;
-  border-radius: 50%;
-`;
-
-const AvatarInput = styled.input`
-  position: absolute;
-  bottom: 0;
-  right: 0;
-  opacity: 0;
-`;
-
-const NicknameInput = styled.input`
+  align-items: center;
   margin-top: 20px;
-  font-size: 18px;
-  padding: 5px;
-  border: 1px solid #ccc;
-  border-radius: 5px;
 `;
 
-const EditButton = styled.button`
-  margin-top: 10px;
-  padding: 5px 10px;
-  background-color: #007bff;
-  color: #fff;
-  border: none;
-  border-radius: 5px;
+const ProfileAvatar = styled.img`
+  width: 100px;
+  height: 100px;
+  border-radius: 50%;
   cursor: pointer;
 `;
 
-const SaveButton = styled(EditButton)`
-  margin-top: 10px;
-  background-color: #28a745;
+const ProfileInfo = styled.p`
+  margin: 10px 0;
 `;
 
-const CancelButton = styled(EditButton)`
-  margin-top: 10px;
-  background-color: #dc3545;
+const NicknameInput = styled.input`
+  margin: 10px 0;
 `;
 
-const UserId = styled.p`
-  margin-top: 20px;
+const ButtonContainer = styled.div`
+  display: flex;
+  justify-content: space-around;
+  width: 100%;
 `;
 
-const Nickname = styled.p`
-  margin-top: 10px;
-`;
+const EditButton = styled.button``;
+
+const CancelButton = styled.button``;
+
+const SaveButton = styled.button``;
 
 export default Profile;
