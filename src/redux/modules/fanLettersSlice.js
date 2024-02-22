@@ -34,12 +34,7 @@ export const editFanLetterAsync = createAsyncThunk(
   "fanLetters/editFanLetter",
   async ({ id, updatedData }, { getState, rejectWithValue }) => {
     try {
-      const { accessToken } = getState().auth;
-      const response = await axios.patch(`${baseURL}/${id}`, updatedData, {
-        headers: {
-          Authorization: `Bearer ${accessToken}`,
-        },
-      });
+      const response = await axios.patch(`${baseURL}/${id}`, updatedData);
       return response.data;
     } catch (err) {
       return rejectWithValue(err.response.data);
@@ -52,12 +47,7 @@ export const deleteFanLetterAsync = createAsyncThunk(
   "fanLetters/deleteFanLetter",
   async (id, { getState, rejectWithValue }) => {
     try {
-      const { accessToken } = getState().auth;
-      await axios.delete(`${baseURL}/${id}`, {
-        headers: {
-          Authorization: `Bearer ${accessToken}`,
-        },
-      });
+      await axios.delete(`${baseURL}/${id}`);
       return id;
     } catch (err) {
       return rejectWithValue(err.response.data);
