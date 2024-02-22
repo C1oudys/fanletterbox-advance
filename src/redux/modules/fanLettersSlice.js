@@ -1,4 +1,3 @@
-// src/redux/fanLettersSlice.js
 import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
 import axios from "axios";
 
@@ -41,7 +40,7 @@ export const editFanLetterAsync = createAsyncThunk(
           Authorization: `Bearer ${accessToken}`,
         },
       });
-      return response.data; // Return the updated data from the server
+      return response.data;
     } catch (err) {
       return rejectWithValue(err.response.data);
     }
@@ -59,7 +58,7 @@ export const deleteFanLetterAsync = createAsyncThunk(
           Authorization: `Bearer ${accessToken}`,
         },
       });
-      return id; // Return the deleted letter ID
+      return id;
     } catch (err) {
       return rejectWithValue(err.response.data);
     }
